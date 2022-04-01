@@ -3,6 +3,7 @@ import { connect } from 'react-redux';
 import propTypes from 'prop-types';
 import fecthAPI from '../services/fetchAPI';
 import { thunkCurrencies, actionObjCurrencies } from '../actions';
+import Table from './Table';
 
 // import wallet from '../reducers/wallet';
 
@@ -169,6 +170,9 @@ class Wallet extends React.Component {
             Adicionar despesa
           </button>
           {/* </form> */}
+        </section>
+        <section>
+          <Table />
         </section>
       </div>
     );
