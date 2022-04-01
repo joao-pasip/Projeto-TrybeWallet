@@ -4,6 +4,7 @@ import fecthAPI from '../services/fetchAPI';
 export const LOGIN_EMAIL = 'LOGIN_EMAIL';
 export const ACTION_LOADING = 'ACTION_LOADING';
 export const CURRENCIES_API = 'CURRENCIES_API';
+export const CURRENCIES_API_OBJ = 'CURRENCIES_API_OBJ';
 export const CURRENCIES_API_ERROR = 'CURRENCIES_API_ERROR';
 
 export const actionLoginEmail = (payload) => ({
@@ -17,6 +18,11 @@ export const actionLoginEmail = (payload) => ({
 
 export const actionCurrencies = (payload) => ({
   type: CURRENCIES_API,
+  payload,
+});
+
+export const actionObjCurrencies = (payload) => ({
+  type: CURRENCIES_API_OBJ,
   payload,
 });
 

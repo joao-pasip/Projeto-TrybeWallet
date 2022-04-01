@@ -25,7 +25,7 @@ class Login extends React.Component {
       [name]: value,
     }, () => {
       const { email, senha } = this.state;
-      console.log(validateEmail(email));
+      // console.log(validateEmail(email));
       if (validateEmail(email) && validateSenha(senha)) {
         // console.log(senha);
         // console.log(senha.length);
