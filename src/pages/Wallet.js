@@ -3,19 +3,18 @@ import { connect } from 'react-redux';
 import propTypes from 'prop-types';
 import fecthAPI from '../services/fetchAPI';
 import { thunkCurrencies, actionObjCurrencies } from '../actions';
+
 // import wallet from '../reducers/wallet';
 
 class Wallet extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
-      despesaTotal: 0,
       value: '',
       description: '',
-      currency: '',
-      method: '',
-      tag: '',
-      exchangeRates: {},
+      currency: 'USD',
+      method: 'Dinheiro',
+      tag: 'Alimentação',
     };
     this.handleChange = this.handleChange.bind(this);
     this.handleClick = this.handleClick.bind(this);
@@ -26,6 +25,7 @@ class Wallet extends React.Component {
     // console.log(response);
     const { propThunk } = this.props;
     propThunk();
+    // propObjThunk();
   }
 
   handleChange({ target }) {
@@ -39,24 +39,9 @@ class Wallet extends React.Component {
     const { propObjExpenses } = this.props;
     const objCurrency = await fecthAPI();
     // console.log(objCurrency);
-    this.setState({
-      exchangeRates: objCurrency,
-    });
-    const {
-      value,
-      description,
-      currency,
-      method,
-      tag,
-      exchangeRates,
-    } = this.state;
     propObjExpenses({
-      value,
-      description,
-      currency,
-      method,
-      tag,
-      exchangeRates,
+      ...this.state,
+      exchangeRates: objCurrency,
     });
     this.setState({
       value: '',
@@ -65,21 +50,30 @@ class Wallet extends React.Component {
       method: '',
       tag: '',
     });
+    // console.log(propExpenses);
   }
 
   render() {
     const {
-      despesaTotal,
       value,
       description,
       currency,
       method,
       tag,
     } = this.state;
-    const { propEmail, propCurrencies } = this.props;
+    const { propEmail, propCurrencies, propExpenses } = this.props;
     // https://www.alura.com.br/artigos/formatando-numeros-no-javascript?gclid=CjwKCAjwopWSBhB6EiwAjxmqDcDMbh-nuByBdE129fiHRVkcLCRX3mFmRJc2OuPp79wKKydu00A0pxoChycQAvD_BwE
-    const conversaoBRL = despesaTotal
-      .toLocaleString('pt-BR', { style: 'currency', currency: 'BRL' });
+    const despesaTotal = propExpenses.reduce((acc, e) => {
+      const currencie = e.currency;
+      const inputValue = e.value;
+      const chaveExchange = e.exchangeRates[currencie];
+      const cotacao = chaveExchange.ask;
+      const conversaoValue = Number(inputValue) * Number(cotacao);
+      return conversaoValue + acc;
+    }, 0);
+
+    // const conversaoBRL = despesaTotal
+    //   .toLocaleString('pt-BR', { style: 'currency', currency: 'BRL' });
     return (
       <div>
         <header>
@@ -92,9 +86,9 @@ class Wallet extends React.Component {
           </div>
           <div>
             <p data-testid="total-field">
-              {`Despesa Total: ${conversaoBRL}`}
-              <span data-testid="header-currency-field"> BRL</span>
+              {`${despesaTotal.toFixed(2)}`}
             </p>
+            <span data-testid="header-currency-field"> BRL</span>
           </div>
         </header>
         <section>
@@ -135,9 +129,9 @@ class Wallet extends React.Component {
               onChange={ this.handleChange }
               value={ method }
             >
-              <option value="dinheiro">Dinheiro</option>
-              <option value="crédito">Cartão de crédito</option>
-              <option value="débito">Cartão de débito</option>
+              <option value="Dinheiro">Dinheiro</option>
+              <option value="Cartão de crédito">Cartão de crédito</option>
+              <option value="Cartão de débito">Cartão de débito</option>
             </select>
           </label>
           <label htmlFor="input_categoria">
@@ -149,11 +143,11 @@ class Wallet extends React.Component {
               onChange={ this.handleChange }
               value={ tag }
             >
-              <option value="alimentação">Alimentação</option>
-              <option value="lazer">Lazer</option>
-              <option value="trabalho">Trabalho</option>
-              <option value="transporte">Transporte</option>
-              <option value="saúde">Saúde</option>
+              <option value="Alimentação">Alimentação</option>
+              <option value="Lazer">Lazer</option>
+              <option value="Trabalho">Trabalho</option>
+              <option value="Transporte">Transporte</option>
+              <option value="Saúde">Saúde</option>
             </select>
           </label>
           <label htmlFor="input_descricao">
@@ -188,11 +182,12 @@ Wallet.propTypes = {
 const mapStateToProps = (state) => ({
   propEmail: state.user.email,
   propCurrencies: state.wallet.currencies,
-  // propInputValue: state.wallet.expenses.
+  propExpenses: state.wallet.expenses,
 });
 
 const mapDispatchToProps = (dispacth) => ({
   propThunk: () => dispacth(thunkCurrencies()),
+  // propObjThunk: () => dispacth(thunkObjCurrencies()),
   propObjExpenses: (payload) => dispacth(actionObjCurrencies(payload)),
 });
 

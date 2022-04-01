@@ -18,6 +18,11 @@ const wallet = (state = INITIAL_STATE, action) => {
       ...state,
       expenses: [...state.expenses, { id: state.expenses.length, ...action.payload }],
     };
+  // case EXCHANGERATES:
+  //   return {
+  //     ...state,
+  //     expenses: { exchangeRates: action.payload },
+  //   };
   default:
     return {
       ...state,

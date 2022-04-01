@@ -6,6 +6,7 @@ export const ACTION_LOADING = 'ACTION_LOADING';
 export const CURRENCIES_API = 'CURRENCIES_API';
 export const CURRENCIES_API_OBJ = 'CURRENCIES_API_OBJ';
 export const CURRENCIES_API_ERROR = 'CURRENCIES_API_ERROR';
+// export const EXCHANGERATES = 'EXCHANGERATES';
 
 export const actionLoginEmail = (payload) => ({
   type: LOGIN_EMAIL,
@@ -26,10 +27,24 @@ export const actionObjCurrencies = (payload) => ({
   payload,
 });
 
+// export const actionExchangeRates = (payload) => ({
+//   type: EXCHANGERATES,
+//   payload,
+// });
+
 export const actionCurrenciesError = (payload) => ({
   type: CURRENCIES_API_ERROR,
   payload,
 });
+
+// export const thunkObjCurrencies = () => async (dispacth) => {
+//   try {
+//     const response = await fecthAPI();
+//     dispacth(actionExchangeRates(response));
+//   } catch (error) {
+//     dispacth(actionCurrenciesError(error));
+//   }
+// };
 
 export const thunkCurrencies = () => async (dispacth) => {
   // dispacth(actionLoading());
