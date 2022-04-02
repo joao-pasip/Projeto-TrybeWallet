@@ -6,7 +6,7 @@ import { thunkCurrencies, actionObjCurrencies } from '../actions';
 import Table from './Table';
 
 // import wallet from '../reducers/wallet';
-
+const Alimentação = 'Alimentação';
 class Wallet extends React.Component {
   constructor(props) {
     super(props);
@@ -15,7 +15,7 @@ class Wallet extends React.Component {
       description: '',
       currency: 'USD',
       method: 'Dinheiro',
-      tag: 'Alimentação',
+      tag: Alimentação,
     };
     this.handleChange = this.handleChange.bind(this);
     this.handleClick = this.handleClick.bind(this);
@@ -47,9 +47,9 @@ class Wallet extends React.Component {
     this.setState({
       value: '',
       description: '',
-      currency: '',
-      method: '',
-      tag: '',
+      currency: 'USD',
+      method: 'Dinheiro',
+      tag: Alimentação,
     });
     // console.log(propExpenses);
   }
@@ -69,6 +69,7 @@ class Wallet extends React.Component {
       const inputValue = e.value;
       const chaveExchange = e.exchangeRates[currencie];
       const cotacao = chaveExchange.ask;
+      // console.log(cotacao);
       const conversaoValue = Number(inputValue) * Number(cotacao);
       return conversaoValue + acc;
     }, 0);
@@ -98,7 +99,7 @@ class Wallet extends React.Component {
             Valor:
             <input
               onChange={ this.handleChange }
-              type="number"
+              type="text"
               data-testid="value-input"
               min="0"
               name="value"
@@ -189,10 +190,10 @@ const mapStateToProps = (state) => ({
   propExpenses: state.wallet.expenses,
 });
 
-const mapDispatchToProps = (dispacth) => ({
-  propThunk: () => dispacth(thunkCurrencies()),
-  // propObjThunk: () => dispacth(thunkObjCurrencies()),
-  propObjExpenses: (payload) => dispacth(actionObjCurrencies(payload)),
+const mapDispatchToProps = (dispatch) => ({
+  propThunk: () => dispatch(thunkCurrencies()),
+  // propObjThunk: () => dispatch(thunkObjCurrencies()),
+  propObjExpenses: (payload) => dispatch(actionObjCurrencies(payload)),
 });
 
 export default connect(mapStateToProps, mapDispatchToProps)(Wallet);

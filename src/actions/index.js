@@ -6,6 +6,7 @@ export const ACTION_LOADING = 'ACTION_LOADING';
 export const CURRENCIES_API = 'CURRENCIES_API';
 export const CURRENCIES_API_OBJ = 'CURRENCIES_API_OBJ';
 export const CURRENCIES_API_ERROR = 'CURRENCIES_API_ERROR';
+export const FILTER_TABLE = 'FILTER_TABLE';
 // export const EXCHANGERATES = 'EXCHANGERATES';
 
 export const actionLoginEmail = (payload) => ({
@@ -24,6 +25,11 @@ export const actionCurrencies = (payload) => ({
 
 export const actionObjCurrencies = (payload) => ({
   type: CURRENCIES_API_OBJ,
+  payload,
+});
+
+export const actionFilterTable = (payload) => ({
+  type: FILTER_TABLE,
   payload,
 });
 
@@ -46,15 +52,15 @@ export const actionCurrenciesError = (payload) => ({
 //   }
 // };
 
-export const thunkCurrencies = () => async (dispacth) => {
-  // dispacth(actionLoading());
+export const thunkCurrencies = () => async (dispatch) => {
+  // dispatch(actionLoading());
   try {
     const response = await fecthAPI();
     const arrayCurrencies = Object.keys(response);
     const currenciesFilter = arrayCurrencies
       .filter((currencie) => (currencie !== 'USDT'));
-    dispacth(actionCurrencies(currenciesFilter));
+    dispatch(actionCurrencies(currenciesFilter));
   } catch (error) {
-    dispacth(actionCurrenciesError(error));
+    dispatch(actionCurrenciesError(error));
   }
 };

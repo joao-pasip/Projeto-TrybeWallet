@@ -1,5 +1,5 @@
 // Esse reducer será responsável por tratar o todas as informações relacionadas as despesas
-import { CURRENCIES_API, CURRENCIES_API_OBJ } from '../actions/index';
+import { CURRENCIES_API, CURRENCIES_API_OBJ, FILTER_TABLE } from '../actions/index';
 
 const INITIAL_STATE = {
   currencies: [],
@@ -18,11 +18,11 @@ const wallet = (state = INITIAL_STATE, action) => {
       ...state,
       expenses: [...state.expenses, { id: state.expenses.length, ...action.payload }],
     };
-  // case EXCHANGERATES:
-  //   return {
-  //     ...state,
-  //     expenses: { exchangeRates: action.payload },
-  //   };
+  case FILTER_TABLE:
+    return {
+      ...state,
+      expenses: state.expenses.filter((expense) => expense.id !== action.payload),
+    };
   default:
     return {
       ...state,

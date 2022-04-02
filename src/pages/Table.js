@@ -1,11 +1,11 @@
 import PropTypes from 'prop-types';
-
 import React from 'react';
 import { connect } from 'react-redux';
+import { actionFilterTable } from '../actions';
 
 class Table extends React.Component {
   render() {
-    const { propExpenses } = this.props;
+    const { propExpenses, propFilter } = this.props;
     return (
       <div>
         <table>
@@ -38,6 +38,16 @@ class Table extends React.Component {
                   <td>{cambio.toFixed(2)}</td>
                   <td>{(inputValue * conversao).toFixed(2)}</td>
                   <td>Real</td>
+                  <td>
+                    <button type="button">Editar</button>
+                    <button
+                      type="button"
+                      data-testid="delete-btn"
+                      onClick={ () => propFilter(element.id) }
+                    >
+                      Excluir
+                    </button>
+                  </td>
                 </tr>
               );
             })}
@@ -58,4 +68,8 @@ const mapStateToProps = (state) => ({
   propExpenses: state.wallet.expenses,
 });
 
-export default connect(mapStateToProps)(Table);
+const mapDispatchToProps = (dispatch) => ({
+  propFilter: (payload) => dispatch(actionFilterTable(payload)),
+});
+
+export default connect(mapStateToProps, mapDispatchToProps)(Table);

@@ -88,8 +88,8 @@ Login.propTypes = {
   }),
 }.isRequired;
 
-const mapDispatchToProps = (dispacth) => ({
-  propStoreEmail: (payload) => dispacth(actionLoginEmail(payload)),
+const mapDispatchToProps = (dispatch) => ({
+  propStoreEmail: (payload) => dispatch(actionLoginEmail(payload)),
 });
 
 export default connect(null, mapDispatchToProps)(Login);
