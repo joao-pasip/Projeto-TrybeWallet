@@ -2,10 +2,9 @@ import React from 'react';
 import { connect } from 'react-redux';
 import propTypes from 'prop-types';
 import fecthAPI from '../services/fetchAPI';
-import { thunkCurrencies, actionObjCurrencies } from '../actions';
+import { thunkCurrencies, actionObjCurrencies, actionEditExpense } from '../actions';
 import Table from './Table';
 
-// import wallet from '../reducers/wallet';
 const Alimentação = 'Alimentação';
 class Wallet extends React.Component {
   constructor(props) {
@@ -19,14 +18,27 @@ class Wallet extends React.Component {
     };
     this.handleChange = this.handleChange.bind(this);
     this.handleClick = this.handleClick.bind(this);
+    this.handleEditTable = this.handleEditTable.bind(this);
+    this.atualizaStateEdit = this.atualizaStateEdit.bind(this);
   }
 
   componentDidMount() {
-    // const response = await fecthAPI();
-    // console.log(response);
     const { propThunk } = this.props;
     propThunk();
     // propObjThunk();
+  }
+
+  componentDidUpdate(prevProps) {
+    const condicionalEditor = prevProps.propEditorCondicional;
+    const { propEditorCondicional } = this.props;
+    if (!condicionalEditor && propEditorCondicional) this.atualizaStateEdit();
+  }
+
+  atualizaStateEdit() {
+    const { propEditTable } = this.props;
+    this.setState(() => ({
+      ...propEditTable,
+    }));
   }
 
   handleChange({ target }) {
@@ -54,6 +66,24 @@ class Wallet extends React.Component {
     // console.log(propExpenses);
   }
 
+  handleEditTable() {
+    const { propEditExpense, propEditTable } = this.props;
+    // const objCurrency = await fecthAPI();
+    propEditExpense({
+      ...this.state,
+      // exchangeRates: objCurrency,
+      id: propEditTable.id,
+    });
+    // console.log(propEditTable);
+    this.setState({
+      value: '',
+      description: '',
+      currency: 'USD',
+      method: 'Dinheiro',
+      tag: Alimentação,
+    });
+  }
+
   render() {
     const {
       value,
@@ -62,7 +92,9 @@ class Wallet extends React.Component {
       method,
       tag,
     } = this.state;
-    const { propEmail, propCurrencies, propExpenses } = this.props;
+    const { propEmail, propCurrencies, propExpenses,
+      propEditorCondicional } = this.props;
+    // console.log(propEditorCondicional);
     // https://www.alura.com.br/artigos/formatando-numeros-no-javascript?gclid=CjwKCAjwopWSBhB6EiwAjxmqDcDMbh-nuByBdE129fiHRVkcLCRX3mFmRJc2OuPp79wKKydu00A0pxoChycQAvD_BwE
     const despesaTotal = propExpenses.reduce((acc, e) => {
       const currencie = e.currency;
@@ -99,7 +131,7 @@ class Wallet extends React.Component {
             Valor:
             <input
               onChange={ this.handleChange }
-              type="text"
+              type="number"
               data-testid="value-input"
               min="0"
               name="value"
@@ -111,6 +143,7 @@ class Wallet extends React.Component {
             Moeda
             <select
               id="input_moeda"
+              data-testid="currency-input"
               name="currency"
               onChange={ this.handleChange }
               value={ currency }
@@ -164,12 +197,23 @@ class Wallet extends React.Component {
               value={ description }
             />
           </label>
-          <button
-            type="button"
-            onClick={ this.handleClick }
-          >
-            Adicionar despesa
-          </button>
+          {
+            propEditorCondicional
+              ? (
+                <button
+                  type="button"
+                  onClick={ this.handleEditTable }
+                >
+                  Editar despesa
+                </button>)
+              : (
+                <button
+                  type="button"
+                  onClick={ this.handleClick }
+                >
+                  Adicionar despesa
+                </button>)
+          }
           {/* </form> */}
         </section>
         <section>
@@ -188,11 +232,14 @@ const mapStateToProps = (state) => ({
   propEmail: state.user.email,
   propCurrencies: state.wallet.currencies,
   propExpenses: state.wallet.expenses,
+  propEditTable: state.wallet.editTable,
+  propEditorCondicional: state.wallet.editor,
 });
 
 const mapDispatchToProps = (dispatch) => ({
   propThunk: () => dispatch(thunkCurrencies()),
   // propObjThunk: () => dispatch(thunkObjCurrencies()),
+  propEditExpense: (payload) => dispatch(actionEditExpense(payload)),
   propObjExpenses: (payload) => dispatch(actionObjCurrencies(payload)),
 });
 

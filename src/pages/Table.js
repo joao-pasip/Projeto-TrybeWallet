@@ -1,11 +1,11 @@
 import PropTypes from 'prop-types';
 import React from 'react';
 import { connect } from 'react-redux';
-import { actionFilterTable } from '../actions';
+import { actionFilterTable, actionEditTable } from '../actions';
 
 class Table extends React.Component {
   render() {
-    const { propExpenses, propFilter } = this.props;
+    const { propExpenses, propFilter, propEditTable } = this.props;
     return (
       <div>
         <table>
@@ -28,18 +28,26 @@ class Table extends React.Component {
               const inputValue = Number(element.value);
               const conversao = Number(element.exchangeRates[currency].ask);
               const cambio = Number(element.exchangeRates[currency].ask);
+              const nameMoeda = element.exchangeRates[currency].name;
+              // const nameTela = nameMoeda.split(nameMoeda.length - 1, '/');
               return (
                 <tr key={ element.id }>
                   <td>{element.description}</td>
                   <td>{element.tag}</td>
                   <td>{element.method}</td>
                   <td>{inputValue.toFixed(2)}</td>
-                  <td>{element.exchangeRates[currency].name}</td>
+                  <td>{nameMoeda}</td>
                   <td>{cambio.toFixed(2)}</td>
                   <td>{(inputValue * conversao).toFixed(2)}</td>
                   <td>Real</td>
                   <td>
-                    <button type="button">Editar</button>
+                    <button
+                      type="button"
+                      data-testid="edit-btn"
+                      onClick={ () => propEditTable(element.id) }
+                    >
+                      Editar
+                    </button>
                     <button
                       type="button"
                       data-testid="delete-btn"
@@ -59,9 +67,9 @@ class Table extends React.Component {
 }
 
 Table.propTypes = {
-  propExpenses: PropTypes.shape({
-    map: PropTypes.func,
-  }),
+  propExpenses: PropTypes.arr,
+  propFilter: PropTypes.func,
+  propEditTable: PropTypes.func,
 }.isRequired;
 
 const mapStateToProps = (state) => ({
@@ -69,6 +77,7 @@ const mapStateToProps = (state) => ({
 });
 
 const mapDispatchToProps = (dispatch) => ({
+  propEditTable: (payload) => dispatch(actionEditTable(payload)),
   propFilter: (payload) => dispatch(actionFilterTable(payload)),
 });
 

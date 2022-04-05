@@ -7,6 +7,8 @@ export const CURRENCIES_API = 'CURRENCIES_API';
 export const CURRENCIES_API_OBJ = 'CURRENCIES_API_OBJ';
 export const CURRENCIES_API_ERROR = 'CURRENCIES_API_ERROR';
 export const FILTER_TABLE = 'FILTER_TABLE';
+export const EDIT_TABLE = 'EDIT_TABLE';
+export const EDIT_EXPENSE = 'EDIT_EXPENSE';
 // export const EXCHANGERATES = 'EXCHANGERATES';
 
 export const actionLoginEmail = (payload) => ({
@@ -30,6 +32,16 @@ export const actionObjCurrencies = (payload) => ({
 
 export const actionFilterTable = (payload) => ({
   type: FILTER_TABLE,
+  payload,
+});
+
+export const actionEditTable = (payload) => ({
+  type: EDIT_TABLE,
+  payload,
+});
+
+export const actionEditExpense = (payload) => ({
+  type: EDIT_EXPENSE,
   payload,
 });
 
