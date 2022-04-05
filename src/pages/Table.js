@@ -28,15 +28,14 @@ class Table extends React.Component {
               const inputValue = Number(element.value);
               const conversao = Number(element.exchangeRates[currency].ask);
               const cambio = Number(element.exchangeRates[currency].ask);
-              const nameMoeda = element.exchangeRates[currency].name;
-              // const nameTela = nameMoeda.split(nameMoeda.length - 1, '/');
+              const nameMoeda = element.exchangeRates[currency].name.split('/');
               return (
                 <tr key={ element.id }>
                   <td>{element.description}</td>
                   <td>{element.tag}</td>
                   <td>{element.method}</td>
                   <td>{inputValue.toFixed(2)}</td>
-                  <td>{nameMoeda}</td>
+                  <td>{nameMoeda[0]}</td>
                   <td>{cambio.toFixed(2)}</td>
                   <td>{(inputValue * conversao).toFixed(2)}</td>
                   <td>Real</td>
