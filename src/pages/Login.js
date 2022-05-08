@@ -1,8 +1,13 @@
+/* eslint-disable jsx-a11y/label-has-associated-control */
 import PropTypes from 'prop-types';
 import React from 'react';
 import { connect } from 'react-redux';
+// import { MdWavingHand } from 'react-icons/md';
+// import { FiDollarSign } from 'react-icons/fi';
 import { validateEmail, validateSenha } from '../helpers/validacoes';
 import { actionLoginEmail } from '../actions';
+import '../styles/login.css';
+import OrbitWallet from '../images/OrbitWallet1.jpg';
 
 class Login extends React.Component {
   constructor(props) {
@@ -11,22 +16,24 @@ class Login extends React.Component {
       email: '',
       senha: '',
       disabled: true,
+      termosServicos: false,
     };
     this.handleChange = this.handleChange.bind(this);
     this.handleClick = this.handleClick.bind(this);
   }
 
   handleChange({ target }) {
-    const { name, value } = target;
-    // console.log(target);
+    const { name } = target;
+    const value = target.type === 'checkbox' ? target.checked : target.value;
+    // console.log(target.checked);
     // console.log(name);
     // console.log(value);
     this.setState({
       [name]: value,
     }, () => {
-      const { email, senha } = this.state;
+      const { email, senha, termosServicos } = this.state;
       // console.log(validateEmail(email));
-      if (validateEmail(email) && validateSenha(senha)) {
+      if (validateEmail(email) && validateSenha(senha) && termosServicos) {
         // console.log(senha);
         // console.log(senha.length);
         this.setState({
@@ -51,9 +58,24 @@ class Login extends React.Component {
   render() {
     const { email, senha, disabled } = this.state;
     return (
-      <div>
-        <form>
+      <main className="loginMain">
+        <form className="loginForm">
+          <div>
+            <h2>
+              Seja bem-vindo
+            </h2>
+          </div>
+          <h1>Você está na OrbitWallet</h1>
+          <p>
+            Se você precisa fazer conversão de moedas mas tem
+            dificuldade de fazer isso, você está no lugar certo.
+            Nós Somos uma plataforma de conversão monetária.
+          </p>
+          <label htmlFor="email" className="labelInputs">
+            E-mail
+          </label>
           <input
+            id="email"
             type="email"
             name="email"
             data-testid="email-input"
@@ -61,7 +83,11 @@ class Login extends React.Component {
             value={ email }
             onChange={ this.handleChange }
           />
+          <label htmlFor="password" className="labelInputs">
+            Senha
+          </label>
           <input
+            id="password"
             type="password"
             name="senha"
             data-testid="password-input"
@@ -69,7 +95,21 @@ class Login extends React.Component {
             value={ senha }
             onChange={ this.handleChange }
           />
+          <div className="checkbox">
+            <input
+              type="checkbox"
+              id="privacidade"
+              name="termosServicos"
+              onChange={ this.handleChange }
+            />
+            <label htmlFor="privacidade">
+              Ao criar uma conta, você está de acordo com nossos
+              Termos e Serviços e Políticas de Privacidade e nossas
+              configurações padrões de notificações.
+            </label>
+          </div>
           <button
+            className={ disabled ? 'buttonDisabled' : 'buttonActive' }
             type="button"
             disabled={ disabled }
             onClick={ this.handleClick }
@@ -77,7 +117,8 @@ class Login extends React.Component {
             Entrar
           </button>
         </form>
-      </div>
+        <img src={ OrbitWallet } alt="OrbitWallet" />
+      </main>
     );
   }
 }
